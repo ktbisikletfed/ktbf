@@ -110,6 +110,29 @@ def _enable_windows_dpi_awareness() -> None:
             pass
 
 
+def _ensure_openpyxl():
+    """Excel export için openpyxl paketini hazırlar; eksikse otomatik kurar."""
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment
+        return Workbook, Font, PatternFill, Alignment
+    except ModuleNotFoundError:
+        try:
+            subprocess.check_call(
+                [sys.executable, "-m", "pip", "install", "openpyxl"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+            )
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment
+            return Workbook, Font, PatternFill, Alignment
+        except Exception as exc:
+            raise RuntimeError(
+                "openpyxl yüklenemedi. Lütfen terminalde şu komutu çalıştırın:\n"
+                "python -m pip install openpyxl"
+            ) from exc
+
+
 def _style_widget(root: tk.Tk) -> ttk.Style:
     style = ttk.Style(root)
     style.theme_use("clam")
@@ -942,9 +965,13 @@ class SporcuSekme(ttk.Frame):
 
     def _sporculari_excel_export(self):
         """Mevcut sporcu listesini Excel (.xlsx) olarak dışa aktarır."""
-        from openpyxl import Workbook
-        from openpyxl.styles import Font, PatternFill, Alignment
         from tkinter import filedialog
+
+        try:
+            Workbook, Font, PatternFill, Alignment = _ensure_openpyxl()
+        except RuntimeError as exc:
+            messagebox.showerror("Bağımlılık Hatası", str(exc))
+            return
 
         rows = []
         for child in self.tree.get_children():

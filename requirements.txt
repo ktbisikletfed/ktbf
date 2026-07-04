@@ -1,14 +1,12 @@
 # KKTC Bisiklet Federasyonu – Proje Bağımlılıkları
 # ==================================================
-# Bu proje yalnızca Python standart kütüphanesini kullanmaktadır.
-# Harici bir üçüncü parti paket gereksinimi yoktur.
-#
+# Excel dışa aktarma özelliği için gerekli paket.
+openpyxl>=3.1.0
+
 # Kullanılan standart modüller:
 #   argparse, csv, ctypes, datetime, http.server, json, os,
 #   pathlib, re, sqlite3, subprocess, tempfile, tkinter, time,
 #   typing, urllib, webbrowser
-#
-# Çalıştırmak için herhangi bir pip install komutuna gerek yoktur.
 #
 # Not: tkinter (GUI) Python ile birlikte gelir. Eğer Linux'ta
 # çalıştırılıyorsa `python3-tk` paketinin yüklü olduğundan emin olun:
